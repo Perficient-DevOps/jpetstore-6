@@ -1,5 +1,10 @@
 node {
   def MVN_HOME
+
+  agent {
+    label 'master'
+  }
+
   stage('Build') {
     git 'https://github.com/Perficient-DevOps/jpetstore-6'
     MVN_HOME = tool 'M3'
