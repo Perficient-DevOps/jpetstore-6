@@ -17,10 +17,10 @@ node ( "master" ) {
 
   stage('Publish to Nexus') {
     nexusArtifactUploader artifacts:
-      [[artifactId: 'jpetstore', classifier: '', file: 'target/jpetstore.war', type: 'war']], 
+      [[artifactId: 'jpetstore', classifier: '', file: 'target/jpetstore.war', type: 'war']],
       credentialsId: 'nexus-admin',
       groupId: 'com.perficient',
-      nexusUrl: 'http://nexus.devopsinabox.perficientdevops.com/:8081',
+      nexusUrl: 'http://nexus.devopsinabox.perficientdevops.com:8081',
       nexusVersion: 'nexus3',
       protocol: 'http',
       repository: 'petsonline',
