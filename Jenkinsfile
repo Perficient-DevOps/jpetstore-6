@@ -32,7 +32,7 @@ node ( "master" ) {
       siteName: 'deploy.devopsinabox.perficientdevops.com',
       component: [
           $class: 'com.urbancode.jenkins.plugins.ucdeploy.VersionHelper$VersionBlock',
-          componentName: 'JPetStore-J2EE',
+          componentName: 'JPetStore-app',
           delivery: [
               $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper$Push',
               pushVersion: '${BUILD_NUMBER}',
