@@ -28,7 +28,7 @@ node ( "master" ) {
           delivery: [
               $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper$Push',
               pushVersion: '${BUILD_NUMBER}',
-              baseDir: '/var/lib/jenkins/workspace/JPetStorePipeline/target',
+              baseDir: '/var/lib/jenkins/workspace/JPetStore-Demo/target',
               fileIncludePatterns: '*.war',
               fileExcludePatterns: '',
               pushProperties: 'jenkins.server=Local\njenkins.reviewed=false',
@@ -45,8 +45,8 @@ node ( "master" ) {
       deploy: [
           $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeployHelper$DeployBlock',
           deployApp: 'JPetStore',
-          deployEnv: 'Development',
-          deployProc: 'JPetStore Deploy',
+          deployEnv: 'DEV',
+          deployProc: 'Deploy',
           deployVersions: 'JPetStore-J2EE:${BUILD_NUMBER}',
           deployOnlyChanged: false
           ]
