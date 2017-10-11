@@ -55,7 +55,7 @@ node ( "master" ) {
           deployApp: 'JPetStore',
           deployEnv: 'DEV',
           deployProc: 'Deploy',
-          deployVersions: 'JPetStore-J2EE:${BUILD_NUMBER}',
+          deployVersions: 'JPetStore-app:${BUILD_NUMBER}',
           deployOnlyChanged: false
           ]
       ])
