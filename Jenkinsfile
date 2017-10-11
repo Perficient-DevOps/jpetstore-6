@@ -21,7 +21,7 @@ node ( "master" ) {
 
   stage('Push to UrbanCode Deploy') {
     step([$class: 'UCDeployPublisher',
-      siteName: '158.85.63.187',
+      siteName: 'deploy.devopsinabox.perficientdevops.com',
       component: [
           $class: 'com.urbancode.jenkins.plugins.ucdeploy.VersionHelper$VersionBlock',
           componentName: 'JPetStore-J2EE',
@@ -41,7 +41,7 @@ node ( "master" ) {
 
   stage('Deploy to Development') {
     step([$class: 'UCDeployPublisher',
-      siteName: '158.85.63.187',
+      siteName: 'deploy.devopsinabox.perficientdevops.com',
       deploy: [
           $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeployHelper$DeployBlock',
           deployApp: 'JPetStore',
