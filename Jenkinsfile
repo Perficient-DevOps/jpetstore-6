@@ -48,7 +48,7 @@ node ( "master" )
           delivery: [
               $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper$Push',
               pushVersion: '${BUILD_NUMBER}',
-              baseDir: '${WORKSPACE}/target',
+              baseDir: "$WORKSPACE/target",
               fileIncludePatterns: '*.war',
               fileExcludePatterns: '',
               pushProperties: 'jenkins.server=Local\njenkins.reviewed=false',
