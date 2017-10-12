@@ -33,7 +33,7 @@ node ( "master" )
       groupId: 'com.perficient',
       nexusUrl: '${NEXUS_HOST}:${NEXUS_PORT}',
       nexusVersion: 'nexus3',
-      protocol: '${NEXUS_HOST}',
+      protocol: '${NEXUS_PROTO}',
       repository: 'petsonline',
       version: '${BUILD_NUMBER}'
     }
