@@ -1,13 +1,24 @@
 node ( "master" ) {
   def MVN_HOME
 
+  environment {
+    NEXUS_PROTO = "http"
+    NEXUS_HOST = "nexus.devopsinabox.perficientdevops.com"
+    NEXUS_PORT = "8081"
+  }
+
   stage('Build') {
 
     git 'https://github.com/Perficient-DevOps/jpetstore-6'
     MVN_HOME = tool 'M3'
 
-    if (isUnix()) {sh "'${MVN_HOME}/bin/mvn' -Dmaven.test.failure.ignore clean package"}
-    else {bat(/"${MVN_HOME}\bin\mvn" -Dmaven.test.failure.ignore clean package/)}
+    if (isUnix())
+    {
+      sh "'${MVN_HOME}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+    } else {
+      bat(/"${MVN_HOME}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
+    }
+
     }
 
   stage('Publish JUnit Results') {
@@ -20,9 +31,9 @@ node ( "master" ) {
       [[artifactId: 'jpetstore', classifier: '', file: 'target/jpetstore.war', type: 'war']],
       credentialsId: 'nexus-admin',
       groupId: 'com.perficient',
-      nexusUrl: 'nexus.devopsinabox.perficientdevops.com:8081',
+      nexusUrl: '${NEXUS_HOST}:${NEXUS_PORT}',
       nexusVersion: 'nexus3',
-      protocol: 'http',
+      protocol: '${NEXUS_HOST}',
       repository: 'petsonline',
       version: '${BUILD_NUMBER}'
     }
