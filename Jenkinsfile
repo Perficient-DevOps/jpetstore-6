@@ -2,9 +2,12 @@ node ( "master" )
 {
 
   def MVN_HOME
+
   def NEXUS_PROTO = "http"
   def NEXUS_HOST = "nexus.devopsinabox.perficientdevops.com"
   def NEXUS_PORT = "8081"
+
+  def DEPLOY_ENV_TARGET = "Development"
 
   stage('Build') {
 
@@ -66,7 +69,7 @@ node ( "master" )
       deploy: [
           $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeployHelper$DeployBlock',
           deployApp: 'JPetStore',
-          deployEnv: 'DEV',
+          deployEnv: "$DEPLOY_ENV_TARGET",
           deployProc: 'Deploy',
           deployVersions: 'JPetStore-app:${BUILD_NUMBER}',
           deployOnlyChanged: false
