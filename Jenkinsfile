@@ -19,21 +19,21 @@ node ( "master" ) {
       bat(/"${MVN_HOME}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
     }
 
-    }
+  }
 
   stage('Publish JUnit Results') {
     junit '**/target/surefire-reports/TEST-*.xml'
     archive 'target/*.jar'
-    }
+  }
 
   stage('Publish to Nexus') {
     nexusArtifactUploader artifacts:
       [[artifactId: 'jpetstore', classifier: '', file: 'target/jpetstore.war', type: 'war']],
       credentialsId: 'nexus-admin',
       groupId: 'com.perficient',
-      nexusUrl: '${NEXUS_HOST}:${NEXUS_PORT}',
+      nexusUrl: '${env.NEXUS_HOST}:${env.NEXUS_PORT}',
       nexusVersion: 'nexus3',
-      protocol: '${NEXUS_HOST}',
+      protocol: '${env.NEXUS_HOST}',
       repository: 'petsonline',
       version: '${BUILD_NUMBER}'
     }
