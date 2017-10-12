@@ -6,7 +6,6 @@ node ( "master" )
   def NEXUS_PROTO = "http"
   def NEXUS_HOST = "nexus.devopsinabox.perficientdevops.com"
   def NEXUS_PORT = "8081"
-
   def DEPLOY_ENV_TARGET = "Development"
 
   stage('Build') {
@@ -34,9 +33,9 @@ node ( "master" )
       [[artifactId: 'jpetstore', classifier: '', file: 'target/jpetstore.war', type: 'war']],
       credentialsId: 'nexus-admin',
       groupId: 'com.perficient',
-      nexusUrl: "nexus.devopsinabox.perficientdevops.com:8081",
+      nexusUrl: "$NEXUS_HOST:$NEXUS_PORT",
       nexusVersion: 'nexus3',
-      protocol: 'http',
+      protocol: "$NEXUS_PROTO",
       repository: 'petsonline',
       version: '${BUILD_NUMBER}'
     }
