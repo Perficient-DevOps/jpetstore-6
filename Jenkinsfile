@@ -31,9 +31,9 @@ node ( "master" )
       [[artifactId: 'jpetstore', classifier: '', file: 'target/jpetstore.war', type: 'war']],
       credentialsId: 'nexus-admin',
       groupId: 'com.perficient',
-      nexusUrl: '${NEXUS_HOST}:8081',
+      nexusUrl: "nexus.devopsinabox.perficientdevops.com:8081",
       nexusVersion: 'nexus3',
-      protocol: '${NEXUS_PROTO}',
+      protocol: 'http',
       repository: 'petsonline',
       version: '${BUILD_NUMBER}'
     }
