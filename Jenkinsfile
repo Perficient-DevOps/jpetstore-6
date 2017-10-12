@@ -1,11 +1,10 @@
-node ( "master" ) {
-  def MVN_HOME
+node ( "master" )
+{
 
-  environment {
-    NEXUS_PROTO = "http"
-    NEXUS_HOST = "nexus.devopsinabox.perficientdevops.com"
-    NEXUS_PORT = "8081"
-  }
+  def MVN_HOME
+  def NEXUS_PROTO = "http"
+  def NEXUS_HOST = "nexus.devopsinabox.perficientdevops.com"
+  def NEXUS_PORT = "8081"
 
   stage('Build') {
 
@@ -26,18 +25,20 @@ node ( "master" ) {
     archive 'target/*.jar'
   }
 
+  // Publish version to Nexus
   stage('Publish to Nexus') {
     nexusArtifactUploader artifacts:
       [[artifactId: 'jpetstore', classifier: '', file: 'target/jpetstore.war', type: 'war']],
       credentialsId: 'nexus-admin',
       groupId: 'com.perficient',
-      nexusUrl: '${env.NEXUS_HOST}:${env.NEXUS_PORT}',
+      nexusUrl: '${NEXUS_HOST}:${NEXUS_PORT}',
       nexusVersion: 'nexus3',
-      protocol: '${env.NEXUS_HOST}',
+      protocol: '${NEXUS_HOST}',
       repository: 'petsonline',
       version: '${BUILD_NUMBER}'
     }
 
+  // Publish to UrbanCode Deploy
   stage('Push to UrbanCode Deploy') {
     step([$class: 'UCDeployPublisher',
       siteName: 'deploy.devopsinabox.perficientdevops.com',
@@ -56,8 +57,9 @@ node ( "master" ) {
               ]
           ]
       ])
-    }
+  }
 
+  // Trigger deployment
   stage('Deploy to Development') {
     step([$class: 'UCDeployPublisher',
       siteName: 'deploy.devopsinabox.perficientdevops.com',
@@ -70,5 +72,6 @@ node ( "master" ) {
           deployOnlyChanged: false
           ]
       ])
-    }
   }
+
+} // end node
