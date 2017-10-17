@@ -63,17 +63,27 @@ node ( "master" )
 
   // Trigger deployment
   stage('Deploy to Development') {
-    step([$class: 'UCDeployPublisher',
-      siteName: 'deploy.devopsinabox.perficientdevops.com',
-      deploy: [
-          $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeployHelper$DeployBlock',
-          deployApp: 'JPetStore',
-          deployEnv: "$DEPLOY_ENV_TARGET",
-          deployProc: 'Deploy',
-          deployVersions: 'JPetStore-app:${BUILD_NUMBER}',
-          deployOnlyChanged: false
-          ]
-      ])
+    steps
+    {
+      sh "echo ${AUTO_DEPLOY}"
+      script
+      {
+        if ( env.AUTO_DEPLOY == 'True' )
+        {
+          step([$class: 'UCDeployPublisher',
+            siteName: 'deploy.devopsinabox.perficientdevops.com',
+            deploy: [
+                $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeployHelper$DeployBlock',
+                deployApp: 'JPetStore',
+                deployEnv: "$DEPLOY_ENV_TARGET",
+                deployProc: 'Deploy',
+                deployVersions: 'JPetStore-app:${BUILD_NUMBER}',
+                deployOnlyChanged: false
+                ]
+            ])
+        }
+      }
+    }
   }
 
 } // end node
