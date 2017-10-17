@@ -17,10 +17,10 @@ pipeline
       steps
       {
         git 'https://github.com/Perficient-DevOps/jpetstore-6'
-        MVN_HOME = tool 'M3'
 
         script
         {
+          def MVN_HOME = tool 'M3'
           if (isUnix())
           {
             sh "'${MVN_HOME}/bin/mvn' -Dmaven.test.failure.ignore clean package"
