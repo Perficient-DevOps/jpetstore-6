@@ -2,12 +2,13 @@ pipeline
 {
   agent any
 
-  def MVN_HOME
-
-  def NEXUS_PROTO = "http"
-  def NEXUS_HOST = "nexus.devopsinabox.perficientdevops.com"
-  def NEXUS_PORT = "8081"
-  def DEPLOY_ENV_TARGET = "Development"
+  environment
+  {
+    NEXUS_PROTO = "http"
+    NEXUS_HOST = "nexus.devopsinabox.perficientdevops.com"
+    NEXUS_PORT = "8081"
+    DEPLOY_ENV_TARGET = "Development"
+  }
 
   stage('Build') {
     steps
