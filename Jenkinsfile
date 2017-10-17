@@ -86,7 +86,7 @@ pipeline
         sh "echo ${AUTO_DEPLOY}"
         script
         {
-          if ( env.AUTO_DEPLOY == 'True' )
+          if ( env.AUTO_DEPLOY == 'true' )
           {
             step([$class: 'UCDeployPublisher',
               siteName: 'deploy.devopsinabox.perficientdevops.com',
