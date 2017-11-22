@@ -10,6 +10,12 @@
 pipeline
 {
   agent any
+  options {
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: '10'))
+    timestamps()
+  }
+  triggers {}
 
   environment
   {
@@ -150,5 +156,16 @@ pipeline
     }
 
   } //end stages
+
+  // Post build sections available
+  // https://jenkins.io/doc/book/pipeline/syntax/#post
+  post {
+    always {}
+    changed {}
+    failure {}
+    success {}
+    unstable {}
+    aborted {}
+  }
 
 } // end node
