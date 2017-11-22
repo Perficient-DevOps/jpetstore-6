@@ -1,3 +1,12 @@
+/*
+ Requires:
+  - build-timestamp
+  - pipeline-utility-steps
+  - nexus-artifact-uploader
+  - ibm-ucdeploy-publisher - https://developer.ibm.com/urbancode/docs/integrating-jenkins-ibm-urbancode-deploy/
+
+*/
+
 pipeline
 {
   agent any
@@ -20,7 +29,7 @@ pipeline
           def pom = readMavenPom file: 'pom.xml'
   				def version = pom.getVersion()
           APP_ID = pom.getArtifactId()
-  				VERSION = "$version-$BUILD_TIMESTAMP_STRING"
+  				VERSION = "$version-$BUILD_TIMESTAMP"
   				VERSION_TAG="${VERSION}"
   				ARTIFACT_FILENAME="${APP_ID}.war"
   				// modify build name to match
