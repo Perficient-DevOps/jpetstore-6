@@ -13,21 +13,30 @@ pipeline
 
   environment
   {
-    GIT_REPO = 'https://github.com/Perficient-DevOps/jpetstore-6'
-
+    // global server level
+    DEPLOY_SERVER = 'deploy.devopsinabox.perficientdevops.com'
     NEXUS_PROTO = "http"
     NEXUS_HOST = "nexus.devopsinabox.perficientdevops.com"
     NEXUS_PORT = "8081"
+
+    // job specific
+    GIT_REPO = 'https://github.com/Perficient-DevOps/jpetstore-6'
     NEXUS_CREDSID = 'nexus-admin'
     NEXUS_REPOSITORY = 'petsonline'
     NEXUS_GROUP = 'com.perficient'
-
-    DEPLOY_SERVER = 'deploy.devopsinabox.perficientdevops.com'
     DEPLOY_ENV_TARGET = "Development"
     DEPLOY_APP_NAME = 'JPetStore'
     DEPLOY_APP_PROCESS = 'Deploy'
     DEPLOY_COMP_NAME = 'JPetStore-app'
 
+  }
+
+  parameters {
+    booleanParam (
+      name: 'AUTO_DEPLOY',
+      defaultValue: true,
+      description: 'Post-build deployment by default'
+    )
   }
 
   stages
