@@ -13,37 +13,49 @@ pipeline
 
   environment
   {
+    GIT_REPO = 'https://github.com/Perficient-DevOps/jpetstore-6'
+
     NEXUS_PROTO = "http"
     NEXUS_HOST = "nexus.devopsinabox.perficientdevops.com"
     NEXUS_PORT = "8081"
+    NEXUS_CREDSID = 'nexus-admin'
+    NEXUS_REPOSITORY = 'petsonline'
+    NEXUS_GROUP = 'com.perficient'
+
+
     DEPLOY_ENV_TARGET = "Development"
+    DEPLOY_APP_NAME = 'JPetStore'
+    DEPLOY_APP_PROCESS = 'Deploy'
+    DEPLOY_COMP_NAME = 'JPetStore-app'
+
   }
 
   stages
   {
 
     stage( "Setup Environment Variables" ) {
-  		steps{
-  			script {
+      steps{
+        script {
           // return http://maven.apache.org/components/ref/3.3.9/maven-model/apidocs/org/apache/maven/model/Model.html
           def pom = readMavenPom file: 'pom.xml'
-  				def version = pom.getVersion()
+          def version = pom.getVersion()
           APP_ID = pom.getArtifactId()
-  				VERSION = "$version-$BUILD_TIMESTAMP"
-  				VERSION_TAG="${VERSION}"
-  				ARTIFACT_FILENAME="${APP_ID}.war"
-  				// modify build name to match
-  				currentBuild.displayName = "${VERSION_TAG}"
-  			}
-  			sh "echo \"version: $VERSION\""
-  			sh "echo \"version_tag: ${VERSION_TAG}\""
-  		}
-  	}
+          // expecting timestamp to be in yyyyMMdd-HHmmss format
+          VERSION = "${version}_${BUILD_TIMESTAMP}"
+          VERSION_TAG="${VERSION}"
+          ARTIFACT_FILENAME="${APP_ID}.war"
+          // modify build name to match
+          currentBuild.displayName = "${VERSION_TAG}"
+        }
+        sh "echo \"version: ${VERSION}\""
+        sh "echo \"version_tag: ${VERSION_TAG}\""
+      }
+    }
 
     stage('Build') {
       steps
       {
-        git 'https://github.com/Perficient-DevOps/jpetstore-6'
+        git GIT_REPO
 
         script
         {
@@ -72,12 +84,12 @@ pipeline
       {
         nexusArtifactUploader artifacts:
           [[artifactId: APP_ID, classifier: '', file: "target/${ARTIFACT_FILENAME}", type: 'war']],
-          credentialsId: 'nexus-admin',
-          groupId: 'com.perficient',
+          credentialsId: NEXUS_CREDSID,
+          groupId: NEXUS_GROUP,
           nexusUrl: "$NEXUS_HOST:$NEXUS_PORT",
           nexusVersion: 'nexus3',
           protocol: NEXUS_PROTO,
-          repository: 'petsonline',
+          repository: NEXUS_REPOSITORY,
           version: VERSION
       }
     }
@@ -90,7 +102,7 @@ pipeline
           siteName: 'deploy.devopsinabox.perficientdevops.com',
           component: [
               $class: 'com.urbancode.jenkins.plugins.ucdeploy.VersionHelper$VersionBlock',
-              componentName: 'JPetStore-app',
+              componentName: DEPLOY_COMP_NAME,
               delivery: [
                   $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper$Push',
                   pushVersion: VERSION,
@@ -108,6 +120,9 @@ pipeline
 
     // Trigger deployment
     stage('Deploy to Development') {
+      when {
+        return params.AUTO_DEPLOY
+      }
       steps
       {
         sh "echo ${AUTO_DEPLOY}"
@@ -119,10 +134,10 @@ pipeline
               siteName: 'deploy.devopsinabox.perficientdevops.com',
               deploy: [
                   $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeployHelper$DeployBlock',
-                  deployApp: 'JPetStore',
-                  deployEnv: "$DEPLOY_ENV_TARGET",
-                  deployProc: 'Deploy',
-                  deployVersions: 'JPetStore-app:${VERSION}',
+                  deployApp: DEPLOY_APP_NAME,
+                  deployEnv: DEPLOY_ENV_TARGET,
+                  deployProc: DEPLOY_APP_PROCESS,
+                  deployVersions: "${DEPLOY_COMP_NAME}:${VERSION}",
                   deployOnlyChanged: false
                   ]
               ])
