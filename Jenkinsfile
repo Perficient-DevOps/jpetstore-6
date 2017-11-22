@@ -13,6 +13,24 @@ pipeline
   stages
   {
 
+    stage( "Setup Environment Variables" ) {
+  		steps{
+  			script {
+          // return http://maven.apache.org/components/ref/3.3.9/maven-model/apidocs/org/apache/maven/model/Model.html
+          def pom = readMavenPom file: 'pom.xml'
+  				def version = pom.getVersion()
+          APP_ID = pom.getArtifactId()
+  				VERSION = "$version-$BUILD_TIMESTAMP_STRING"
+  				VERSION_TAG="${VERSION}"
+  				ARTIFACT_FILENAME="${APP_ID}.war"
+  				// modify build name to match
+  				currentBuild.displayName = "${VERSION_TAG}"
+  			}
+  			sh "echo \"version: $VERSION\""
+  			sh "echo \"version_tag: ${VERSION_TAG}\""
+  		}
+  	}
+
     stage('Build') {
       steps
       {
@@ -44,14 +62,14 @@ pipeline
       steps
       {
         nexusArtifactUploader artifacts:
-          [[artifactId: 'jpetstore', classifier: '', file: 'target/jpetstore.war', type: 'war']],
+          [[artifactId: APP_ID, classifier: '', file: "target/${ARTIFACT_FILENAME}", type: 'war']],
           credentialsId: 'nexus-admin',
           groupId: 'com.perficient',
           nexusUrl: "$NEXUS_HOST:$NEXUS_PORT",
           nexusVersion: 'nexus3',
-          protocol: "$NEXUS_PROTO",
+          protocol: NEXUS_PROTO,
           repository: 'petsonline',
-          version: '${BUILD_NUMBER}'
+          version: VERSION
       }
     }
 
@@ -66,12 +84,12 @@ pipeline
               componentName: 'JPetStore-app',
               delivery: [
                   $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper$Push',
-                  pushVersion: '${BUILD_NUMBER}',
+                  pushVersion: VERSION,
                   baseDir: "$WORKSPACE/target",
                   fileIncludePatterns: '*.war',
                   fileExcludePatterns: '',
                   pushProperties: 'jenkins.server=Local\njenkins.reviewed=false',
-                  pushDescription: 'Pushed from Jenkins Pipeline',
+                  pushDescription: "Pushed from Jenkins Pipeline build ${BUILD_ID}",
                   pushIncremental: false
                   ]
               ]
@@ -95,7 +113,7 @@ pipeline
                   deployApp: 'JPetStore',
                   deployEnv: "$DEPLOY_ENV_TARGET",
                   deployProc: 'Deploy',
-                  deployVersions: 'JPetStore-app:${BUILD_NUMBER}',
+                  deployVersions: 'JPetStore-app:${VERSION}',
                   deployOnlyChanged: false
                   ]
               ])
