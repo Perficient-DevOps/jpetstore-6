@@ -120,9 +120,7 @@ pipeline
 
     // Trigger deployment
     stage('Deploy to Development') {
-      when {
-        return params.AUTO_DEPLOY
-      }
+      when { expression{ return params.AUTO_DEPLOY } }
       steps
       {
         sh "echo ${AUTO_DEPLOY}"
