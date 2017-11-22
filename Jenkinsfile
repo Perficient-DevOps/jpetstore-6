@@ -159,6 +159,7 @@ pipeline
 
   // Post build sections available
   // https://jenkins.io/doc/book/pipeline/syntax/#post
+  /*
   post {
     always {}
     changed {}
@@ -167,5 +168,5 @@ pipeline
     unstable {}
     aborted {}
   }
-
+*/
 } // end node
