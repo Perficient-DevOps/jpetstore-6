@@ -22,7 +22,7 @@ pipeline
     NEXUS_REPOSITORY = 'petsonline'
     NEXUS_GROUP = 'com.perficient'
 
-
+    DEPLOY_SERVER = 'deploy.devopsinabox.perficientdevops.com'
     DEPLOY_ENV_TARGET = "Development"
     DEPLOY_APP_NAME = 'JPetStore'
     DEPLOY_APP_PROCESS = 'Deploy'
@@ -99,7 +99,7 @@ pipeline
       steps
       {
         step([$class: 'UCDeployPublisher',
-          siteName: 'deploy.devopsinabox.perficientdevops.com',
+          siteName: DEPLOY_SERVER,
           component: [
               $class: 'com.urbancode.jenkins.plugins.ucdeploy.VersionHelper$VersionBlock',
               componentName: DEPLOY_COMP_NAME,
@@ -123,23 +123,19 @@ pipeline
       when { expression{ return params.AUTO_DEPLOY } }
       steps
       {
-        sh "echo ${AUTO_DEPLOY}"
         script
         {
-          if ( env.AUTO_DEPLOY == 'true' )
-          {
-            step([$class: 'UCDeployPublisher',
-              siteName: 'deploy.devopsinabox.perficientdevops.com',
-              deploy: [
-                  $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeployHelper$DeployBlock',
-                  deployApp: DEPLOY_APP_NAME,
-                  deployEnv: DEPLOY_ENV_TARGET,
-                  deployProc: DEPLOY_APP_PROCESS,
-                  deployVersions: "${DEPLOY_COMP_NAME}:${VERSION}",
-                  deployOnlyChanged: false
-                  ]
-              ])
-          }
+          step([$class: 'UCDeployPublisher',
+            siteName: DEPLOY_SERVER,
+            deploy: [
+                $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeployHelper$DeployBlock',
+                deployApp: DEPLOY_APP_NAME,
+                deployEnv: DEPLOY_ENV_TARGET,
+                deployProc: DEPLOY_APP_PROCESS,
+                deployVersions: "${DEPLOY_COMP_NAME}:${VERSION}",
+                deployOnlyChanged: false
+                ]
+            ])
         }
       }
     }
