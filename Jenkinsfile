@@ -40,7 +40,7 @@ pipeline
   parameters {
     booleanParam (
       name: 'AUTO_DEPLOY',
-      defaultValue: true,
+      defaultValue: false,
       description: 'Post-build deployment by default'
     )
   }
@@ -71,25 +71,15 @@ pipeline
       steps
       {
         git GIT_REPO
-
-        script
-        {
-          def MVN_HOME = tool 'M3'
-          if (isUnix())
-          {
-            sh "'${MVN_HOME}/bin/mvn' -Dmaven.test.failure.ignore clean package"
-          } else {
-            bat(/"${MVN_HOME}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
-          }
-        }
+        sh 'gradle war'
       }
     } // end Build
 
     stage('Publish JUnit Results') {
       steps
       {
-        junit '**/target/surefire-reports/TEST-*.xml'
-        archive 'target/*.jar'
+        junit '**/build/surefire-reports/TEST-*.xml'
+        archive 'build/*.jar'
       }
     }
 
@@ -98,7 +88,7 @@ pipeline
       steps
       {
         nexusArtifactUploader artifacts:
-          [[artifactId: APP_ID, classifier: '', file: "target/${ARTIFACT_FILENAME}", type: 'war']],
+          [[artifactId: APP_ID, classifier: '', file: "build/${ARTIFACT_FILENAME}", type: 'war']],
           credentialsId: NEXUS_CREDSID,
           groupId: NEXUS_GROUP,
           nexusUrl: "$NEXUS_HOST:$NEXUS_PORT",
