@@ -13,9 +13,9 @@ pipeline
   options {
     disableConcurrentBuilds()
     buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: '10'))
-    timestamps()
+    //timestamps()
   }
-  triggers {}
+  //triggers {}
 
   environment
   {
@@ -159,6 +159,7 @@ pipeline
 
   // Post build sections available
   // https://jenkins.io/doc/book/pipeline/syntax/#post
+  /*
   post {
     always {}
     changed {}
@@ -167,5 +168,5 @@ pipeline
     unstable {}
     aborted {}
   }
-
+*/
 } // end node
