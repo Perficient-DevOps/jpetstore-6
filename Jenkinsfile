@@ -76,7 +76,9 @@ pipeline
     stage('Build') {
       steps
       {
-        git GIT_REPO
+        //git GIT_REPO
+        checkout scm
+        
         sh 'gradle war'
       }
     } // end Build
