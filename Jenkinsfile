@@ -29,7 +29,7 @@ pipeline
     GIT_REPO = 'https://github.com/Perficient-DevOps/jpetstore-6'
     NEXUS_CREDSID = 'nexus-admin'
     NEXUS_REPOSITORY = 'petsonline2'
-    NEXUS_GROUP = 'com.perficient'
+    NEXUS_GROUP = ''
     DEPLOY_ENV_TARGET = "Development"
     DEPLOY_APP_NAME = 'JPetStore'
     DEPLOY_APP_PROCESS = 'Deploy'
@@ -48,13 +48,19 @@ pipeline
   stages
   {
 
-    stage( "Setup Environment Variables" ) {
+    stage( "Setup Environment Variables from workspace metadata" ) {
       steps{
         script {
-          // return http://maven.apache.org/components/ref/3.3.9/maven-model/apidocs/org/apache/maven/model/Model.html
-          def pom = readMavenPom file: 'pom.xml'
-          def version = pom.getVersion()
-          APP_ID = pom.getArtifactId()
+          // read configuration from source, pipeline utility steps provides
+          // readProperties, readJson, readMavenPom, readYaml, readManifest
+
+          def props = readProperties file: 'gradle.properties'
+          def version = props['version']
+
+          APP_ID = props['name']
+          NEXUS_GROUP = props['group']
+
+
           // expecting timestamp to be in yyyyMMdd-HHmmss format
           VERSION = "${version}_${BUILD_TIMESTAMP}"
           VERSION_TAG="${VERSION}"
