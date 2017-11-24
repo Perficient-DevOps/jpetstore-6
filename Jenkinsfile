@@ -86,13 +86,13 @@ pipeline
       }
     } // end Build
 
-    stage('Publish JUnit Results') {
-      steps
-      {
-        junit '**/build/surefire-reports/TEST-*.xml'
-        archive 'build/*.jar'
-      }
-    }
+    // stage('Publish JUnit Results') {
+    //   steps
+    //   {
+    //     junit '**/build/surefire-reports/TEST-*.xml'
+    //     archive 'build/*.jar'
+    //   }
+    // }
 
     // Publish version to Nexus
     stage('Publish to Nexus') {
