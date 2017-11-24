@@ -15,7 +15,7 @@ pipeline
     buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: '10'))
     //timestamps()
   }
-  triggers {}
+  //triggers {}
 
   environment
   {
