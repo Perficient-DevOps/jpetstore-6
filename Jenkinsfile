@@ -70,7 +70,7 @@ pipeline
           // expecting timestamp to be in yyyyMMdd-HHmmss format
           VERSION = "${version}_${BUILD_TIMESTAMP}"
           VERSION_TAG="${VERSION}"
-          ARTIFACT_FILENAME="${APP_ID}.war"
+          ARTIFACT_FILENAME="${APP_ID}-${VERSION}.war"
           // modify build name to match
           currentBuild.displayName = "${VERSION_TAG}"
         }
