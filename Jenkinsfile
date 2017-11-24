@@ -47,6 +47,10 @@ pipeline
 
   stages
   {
+    stage( "Checkout Source"){
+      checkout scm
+    }
+
 
     stage( "Setup Environment Variables from workspace metadata" ) {
       steps{
@@ -73,12 +77,9 @@ pipeline
       }
     }
 
-    stage('Build') {
+    stage('Build, Test, and Package') {
       steps
       {
-        //git GIT_REPO
-        checkout scm
-        
         sh 'gradle war'
       }
     } // end Build
