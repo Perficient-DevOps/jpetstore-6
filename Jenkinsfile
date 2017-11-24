@@ -98,7 +98,7 @@ pipeline
       steps
       {
         nexusArtifactUploader artifacts:
-          [[artifactId: APP_ID, classifier: '', file: "build/${ARTIFACT_FILENAME}", type: 'war']],
+          [[artifactId: APP_ID, classifier: '', file: "build/libs/${ARTIFACT_FILENAME}", type: 'war']],
           credentialsId: NEXUS_CREDSID,
           groupId: NEXUS_GROUP,
           nexusUrl: "$NEXUS_HOST:$NEXUS_PORT",
