@@ -66,11 +66,10 @@ pipeline
           APP_ID = props['name']
           NEXUS_GROUP = props['group']
 
-
           // expecting timestamp to be in yyyyMMdd-HHmmss format
           VERSION = "${version}_${BUILD_TIMESTAMP}"
           VERSION_TAG="${VERSION}"
-          ARTIFACT_FILENAME="${APP_ID}-${VERSION}.war"
+          ARTIFACT_FILENAME="${APP_ID}-${version}.war"
           // modify build name to match
           currentBuild.displayName = "${VERSION_TAG}"
         }
