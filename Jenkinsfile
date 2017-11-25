@@ -14,10 +14,10 @@ pipeline
     disableConcurrentBuilds()
     buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: '10'))
     //timestamps()
-    githubPush()
-    
   }
-  //triggers {}
+  triggers {
+    githubPush()
+  }
 
   environment
   {
