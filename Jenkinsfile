@@ -30,7 +30,7 @@ pipeline
     // job specific
     GIT_REPO = 'https://github.com/Perficient-DevOps/jpetstore-6'
     NEXUS_CREDSID = 'nexus-admin'
-    NEXUS_REPOSITORY = 'petsonline2'
+    NEXUS_REPOSITORY = 'petsonline'
     NEXUS_GROUP = ''
     DEPLOY_ENV_TARGET = "Development"
     DEPLOY_APP_NAME = 'JPetStore'
