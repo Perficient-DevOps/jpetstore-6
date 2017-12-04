@@ -15,7 +15,9 @@ pipeline
     buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: '10'))
     //timestamps()
   }
-  //triggers {}
+  triggers {
+    githubPush()
+  }
 
   environment
   {
@@ -29,7 +31,7 @@ pipeline
     GIT_REPO = 'https://github.com/Perficient-DevOps/jpetstore-6'
     NEXUS_CREDSID = 'nexus-admin'
     NEXUS_REPOSITORY = 'petsonline'
-    NEXUS_GROUP = 'com.perficient'
+    NEXUS_GROUP = ''
     DEPLOY_ENV_TARGET = "Development"
     DEPLOY_APP_NAME = 'JPetStore'
     DEPLOY_APP_PROCESS = 'Deploy'
@@ -40,65 +42,66 @@ pipeline
   parameters {
     booleanParam (
       name: 'AUTO_DEPLOY',
-      defaultValue: true,
+      defaultValue: false,
       description: 'Post-build deployment by default'
     )
   }
 
   stages
   {
+    stage( "Checkout Source"){
+      steps{
+        checkout scm
+      }
+    }
 
-    stage( "Setup Environment Variables" ) {
+
+    stage( "Setup Environment Variables from workspace metadata" ) {
       steps{
         script {
-          // return http://maven.apache.org/components/ref/3.3.9/maven-model/apidocs/org/apache/maven/model/Model.html
-          def pom = readMavenPom file: 'pom.xml'
-          def version = pom.getVersion()
-          APP_ID = pom.getArtifactId()
+          // read configuration from source, pipeline utility steps provides
+          // readProperties, readJson, readMavenPom, readYaml, readManifest
+
+          def props = readProperties file: 'gradle.properties'
+          def version = props['version']
+
+          APP_ID = props['name']
+          NEXUS_GROUP = props['group']
+
           // expecting timestamp to be in yyyyMMdd-HHmmss format
           VERSION = "${version}_${BUILD_TIMESTAMP}"
           VERSION_TAG="${VERSION}"
-          ARTIFACT_FILENAME="${APP_ID}.war"
+          ARTIFACT_FILENAME="${APP_ID}-${version}.war"
           // modify build name to match
           currentBuild.displayName = "${VERSION_TAG}"
         }
-        sh "echo \"version: ${VERSION}\""
-        sh "echo \"version_tag: ${VERSION_TAG}\""
+        sh "echo 'version: ${VERSION}'"
+        sh "echo 'version_tag: ${VERSION_TAG}'"
+        sh "echo 'articat_filename: ${ARTIFACT_FILENAME}'"
       }
     }
 
-    stage('Build') {
+    stage('Build, Test, and Package') {
       steps
       {
-        git GIT_REPO
-
-        script
-        {
-          def MVN_HOME = tool 'M3'
-          if (isUnix())
-          {
-            sh "'${MVN_HOME}/bin/mvn' -Dmaven.test.failure.ignore clean package"
-          } else {
-            bat(/"${MVN_HOME}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
-          }
-        }
+        sh 'gradle war'
       }
     } // end Build
 
-    stage('Publish JUnit Results') {
-      steps
-      {
-        junit '**/target/surefire-reports/TEST-*.xml'
-        archive 'target/*.jar'
-      }
-    }
+    // stage('Publish JUnit Results') {
+    //   steps
+    //   {
+    //     junit '**/build/surefire-reports/TEST-*.xml'
+    //     archive 'build/*.jar'
+    //   }
+    // }
 
     // Publish version to Nexus
     stage('Publish to Nexus') {
       steps
       {
         nexusArtifactUploader artifacts:
-          [[artifactId: APP_ID, classifier: '', file: "target/${ARTIFACT_FILENAME}", type: 'war']],
+          [[artifactId: APP_ID, classifier: '', file: "build/libs/${ARTIFACT_FILENAME}", type: 'war']],
           credentialsId: NEXUS_CREDSID,
           groupId: NEXUS_GROUP,
           nexusUrl: "$NEXUS_HOST:$NEXUS_PORT",
@@ -111,6 +114,7 @@ pipeline
 
     // Publish to UrbanCode Deploy
     stage('Push to UrbanCode Deploy') {
+      when { expression{ return params.AUTO_DEPLOY } }
       steps
       {
         step([$class: 'UCDeployPublisher',
