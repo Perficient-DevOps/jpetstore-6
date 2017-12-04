@@ -75,8 +75,9 @@ pipeline
           // modify build name to match
           currentBuild.displayName = "${VERSION_TAG}"
         }
-        sh "echo \"version: ${VERSION}\""
-        sh "echo \"version_tag: ${VERSION_TAG}\""
+        sh "echo 'version: ${VERSION}'"
+        sh "echo 'version_tag: ${VERSION_TAG}'"
+        sh "echo 'articat_filename: ${ARTIFACT_FILENAME}'"
       }
     }
 
@@ -113,6 +114,7 @@ pipeline
 
     // Publish to UrbanCode Deploy
     stage('Push to UrbanCode Deploy') {
+      when { expression{ return params.AUTO_DEPLOY } }
       steps
       {
         step([$class: 'UCDeployPublisher',
