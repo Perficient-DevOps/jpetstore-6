@@ -125,7 +125,7 @@ pipeline
               delivery: [
                   $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper$Push',
                   pushVersion: VERSION,
-                  baseDir: "$WORKSPACE/target",
+                  baseDir: "build/libs",
                   fileIncludePatterns: '*.war',
                   fileExcludePatterns: '',
                   pushProperties: 'jenkins.server=Local\njenkins.reviewed=false',
