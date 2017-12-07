@@ -12,7 +12,7 @@ pipeline
   agent any
   options {
     disableConcurrentBuilds()
-    buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: '10'))
+    buildDiscarder(logRotator(artifactDaysToKeepStr: '7', artifactNumToKeepStr: '10', daysToKeepStr: '7', numToKeepStr: '10'))
     //timestamps()
   }
   triggers {
