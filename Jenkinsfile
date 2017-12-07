@@ -42,7 +42,7 @@ pipeline
   parameters {
     booleanParam (
       name: 'AUTO_DEPLOY',
-      defaultValue: false,
+      defaultValue: true,
       description: 'Post-build deployment by default'
     )
   }
