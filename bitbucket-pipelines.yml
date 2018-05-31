@@ -20,4 +20,4 @@ pipelines:
         caches:
           - gradle
         script:
-          - bash ./gradelw test
+          - bash ./gradlew test
