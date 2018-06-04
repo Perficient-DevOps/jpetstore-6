@@ -31,3 +31,15 @@ Running JPetStore sample under Tomcat (using the [cargo-maven2-plugin](https://c
   $ cd jpetstore-6
   $ gradle war
   ```
+
+## Use with Docker
+
+The Docker file is based on the `tomcat:8.0.20-jre8` image and takes one argument to identify which intermediate war file to bring into the container post build.
+
+    gradle war
+    version=`cat gradle.properties |grep version|awk {'print $3'}`
+    echo "Building version $version"
+
+    docker build -t sgwilbur/jpetstore:$version --build-arg version=$version .
+
+    docker run -d -p 8080:8080 sgwilbur/jpetstore:$version
