@@ -18,7 +18,7 @@ body {
   padding: 0ex;
   font-family: helvetica, tahoma, arial, verdana, sans-serif;
   font-size: 2ex;
-  color: #333;
+  color: #111;
   background-color: #444;
 }
 
@@ -129,7 +129,7 @@ a.Button:hover {
   border-style: solid;
   border-color: #ccc;
   float: left;
-  background-color: #000;
+  background-color: #444;
   color: #fff;
   line-height: 9ex;
   voice-family: "\"}\"";
@@ -150,7 +150,7 @@ body>#Logo {
   border-style: solid;
   border-color: #ccc;
   float: left;
-  background-color: #000;
+  background-color: #444;
   color: #eaac00;
   text-decoration: none;
   font-family: helvetica, tahoma, arial, verdana, sans-serif;
@@ -184,7 +184,7 @@ body>#Menu {
   border-color: #ccc;
   float: left;
   text-align: center;
-  background-color: #000;
+  background-color: #444;
   color: #eaac00;
   line-height: 9ex;
   voice-family: "\"}\"";
@@ -219,7 +219,7 @@ body>#Search {
   border-style: solid;
   border-color: #ccc;
   float: left;
-  background-color: #000;
+  background-color: #444;
   color: #fff;
   line-height: 9ex;
   voice-family: "\"}\"";
@@ -240,7 +240,7 @@ body>#PoweredBy {
   border-style: solid;
   border-color: #ccc;
   float: left;
-  background-color: #000;
+  background-color: #444;
   color: #fff;
   line-height: 9ex;
   voice-family: "\"}\"";
@@ -321,7 +321,7 @@ body>#Banner {
   float: right;
   border-width: .1ex 0ex .1ex 0px;
   border-style: solid;
-  border-color: #000;
+  border-color: #444;
 }
 
 #Cart{
