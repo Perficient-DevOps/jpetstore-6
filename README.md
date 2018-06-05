@@ -43,3 +43,36 @@ The Docker file is based on the `tomcat:8.0.20-jre8` image and takes one argumen
     docker build -t sgwilbur/jpetstore:$version --build-arg version=$version .
 
     docker run -d -p 8080:8080 sgwilbur/jpetstore:$version
+
+
+## Deploy to local minikube Kubernetes
+
+Build this and deploy container to local or remote registry, then connect
+
+    minikube start
+    eval $( minikube docker-env)
+    export version=6.0.4
+
+    kubectl config use-context minikube
+    docker build -t sgwilbur/jpetstore:$version --build-arg version=$version .
+    kubectl run jpetstore --image=sgwilbur/jpetstore:$version --port 8080
+    kubectl expose deployment jpetstore --type=LoadBalancer
+    minikube service jpetstore
+
+To cleanup
+
+    kubectl delete service jpetstore
+    kubectl delete deployment jpetstore
+
+    #docker rmi jpetstore -f
+
+Or use the kubectl apply command
+
+    kubectl apply -f deployment.yaml
+    kubectl expose deployment jpetstore --type=LoadBalancer --name=jpetstore-service
+    minikube service jpetstore-service
+
+cleanup from here
+
+    kubectl delete services jpetstore-service
+    kubectl delete deployment jpetstore

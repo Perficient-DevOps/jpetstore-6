@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jpetstore
+spec:
+  selector:
+    matchLabels:
+      app: jpetstore
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jpetstore
+    spec:
+      containers:
+      - name: jpetstore
+        image: sgwilbur/jpetstore:6.0.4
+        ports:
+        - containerPort: 8080
