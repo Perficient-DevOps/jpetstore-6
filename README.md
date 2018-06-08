@@ -76,3 +76,23 @@ cleanup from here
 
     kubectl delete services jpetstore-service
     kubectl delete deployment jpetstore
+
+
+## publishing to Amazon ECS
+
+export version=`cat gradle.properties |grep version|awk {'print $3'}`
+
+export docker_registry_user=AWS
+#export docker_registry_pass=
+export docker_registry_server=251721600074.dkr.ecr.us-east-1.amazonaws.com
+export docker_registry_url=https://${docker_registry_server}
+
+docker login -u ${docker_registry_user} -p ${docker_registry_pass} ${docker_registry_url}
+
+## Requires we pre-create the ECR registry for this container
+## https://console.aws.amazon.com/ecs/home?region=us-east-1#/repositories/create/new
+
+
+docker build -t jpetstore:${version} --build-arg version=${version} .
+docker tag jpetstore:${version}  ${docker_registry_server}/perficient-devops/jpetstore:${version}
+docker push ${docker_registry_server}/perficient-devops/jpetstore:${version}
